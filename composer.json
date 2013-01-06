@@ -1,0 +1,36 @@
+{
+    "name": "nautilus/form",
+    "type": "library",
+    "description": "Form component",
+    "keywords": ["library", "form", "forms"],
+    "homepage": "http://lipek.net",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Michał Lipek",
+            "email": "michal@lipek.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "nautilus/validator": "dev-master"
+    },
+    "replace": {
+
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-0": { "Nautilus": "src/" },
+        "classmap": []
+    },
+    "minimum-stability": "dev",
+    "extra": {},
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/renq/Validator.git"
+        }
+    ]
+}
