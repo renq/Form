@@ -77,4 +77,32 @@ class TagTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\RuntimeException');
         $div = new Tag('input checked');
     }
+
+    public function testSetAttributes()
+    {
+        $attributes = array(
+            'class' => 'float-left highlight-text',
+            'id' => 'message',
+            'data-user-id' => 15
+        );
+        $div = new Tag('div');
+        $div->setAttributes($attributes);
+        $this->assertEquals($attributes['class'], $div->getAttribute('class'));
+        $this->assertEquals($attributes['id'], $div->getAttribute('id'));
+        $this->assertEquals($attributes['data-user-id'], $div->getAttribute('data-user-id'));
+
+        $this->assertEquals($attributes, $div->getAttributes());
+    }
+
+    public function testTagsClosing()
+    {
+        $tag = new Tag('br');
+        $this->assertNotContains('</br>', (string)$tag);
+        $tag->setTag('hr');
+        $this->assertNotContains('</hr>', (string)$tag);
+        $tag->setTag('input');
+        $this->assertNotContains('</input>', (string)$tag);
+        $tag->setTag('select');
+        $this->assertContains('</select>', (string)$tag);
+    }
 }

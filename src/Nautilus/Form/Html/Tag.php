@@ -2,18 +2,19 @@
 
 namespace Nautilus\Form\Html;
 
-class Tag
+class Tag implements AttributesInterface
 {
 
     private $tag;
 
-    private $attributes = array();
+    private $attributes;
 
     private $html;
 
     public function __construct($tag)
     {
         $this->setTag($tag);
+        $this->attributes = new Attributes();
     }
 
     public function setTag($tag)
@@ -30,31 +31,6 @@ class Tag
         return $this->tag;
     }
 
-    public function setAttribute($attribute, $value)
-    {
-        if (!preg_match('/^[a-z_\-:][-a-z0-9_:\-]*$/', $attribute)) {
-            throw new \RuntimeException("Incorrect attribute name \"{$attribute}\"");
-        }
-        $this->attributes[$attribute] = $value;
-        return $this;
-    }
-
-    public function getAttribute($attribute)
-    {
-        if (!isset($this->attributes[$attribute])) {
-            return '';
-        }
-        return $this->attributes[$attribute];
-    }
-
-    public function removeAttribute($attribute)
-    {
-        if (isset($this->attributes[$attribute])) {
-            unset($this->attributes[$attribute]);
-        }
-        return $this;
-    }
-
     public function setHtml($html)
     {
         $this->html = $html;
@@ -68,8 +44,18 @@ class Tag
 
     public function render()
     {
+        $attributes = $this->getAttributesAsString();
+        if (strlen($attributes)) {
+            $attributes = " {$attributes}";
+        }
+
+        $closing = '';
+        if (!in_array($this->getTag(), array('br', 'hr', 'input'))) {
+            $closing = '</' . $this->getTag() . '>';
+        }
+
         $result = <<<HTML
-<{$this->getTag()} {$this->getAttributesString()}>{$this->getHtml()}</{$this->getTag()}>
+<{$this->getTag()}{$attributes}>{$this->getHtml()}{$closing}
 HTML;
         return $result;
     }
@@ -78,19 +64,44 @@ HTML;
         return $this->render();
     }
 
-    private function getAttributesString()
+    // metods from interface AttributesInterface
+
+    public function setAttribute($attribute, $value)
     {
-        $result = '';
-        foreach ($this->attributes as $k => $v) {
-            $v = $this->escapeValue($v);
-            $result .= "$k=\"$v\" ";
-        }
-        return trim($result);
+        $this->attributes->setAttribute($attribute, $value);
+        return $this;
     }
 
-    private function escapeValue($value)
+    public function getAttribute($attribute)
     {
-        return htmlentities($value, ENT_COMPAT, 'UTF-8');
+        return $this->attributes->getAttribute($attribute);
     }
 
+    public function removeAttribute($attribute)
+    {
+        $this->attributes->removeAttribute($attribute);
+        return $this;
+    }
+
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes->setAttributes($attributes);
+        return $this;
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes->getAttributes();
+    }
+
+    public function removeAttributes()
+    {
+        $this->attributes->removeAttributes();
+        return $this;
+    }
+
+    public function getAttributesAsString()
+    {
+        return $this->attributes->getAttributesAsString();
+    }
 }
