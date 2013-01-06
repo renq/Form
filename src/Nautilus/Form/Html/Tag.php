@@ -33,7 +33,7 @@ class Tag
     public function setAttribute($attribute, $value)
     {
         if (!preg_match('/^[a-z_\-:][-a-z0-9_:\-]*$/', $attribute)) {
-            throw new \RuntimeException("Incorrect attribute name \"{$attribute}{\"");
+            throw new \RuntimeException("Incorrect attribute name \"{$attribute}\"");
         }
         $this->attributes[$attribute] = $value;
         return $this;
