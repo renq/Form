@@ -54,4 +54,24 @@ class BaseContainerTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals(2, $i);
     }
+
+    public function testValidate()
+    {
+        $nick = $this->getNick();
+        $email = $this->getEmail();
+
+        $container = new BaseContainer();
+        $container
+            ->addObject($nick)
+            ->addObject($email);
+
+        $this->assertFalse($container->validate());
+        // var_dump($container->getErrors());
+        $this->assertEquals(2, count($container->getErrors()));
+
+        $nick->setValue('troll face');
+        $this->assertFalse($container->validate());
+
+        $email->setValue('troll@face.com');
+    }
 }

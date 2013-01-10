@@ -109,6 +109,7 @@ abstract class Element implements FormObjectInterface
     public function validate()
     {
         $result = true;
+        $this->validationErrors = array();
         foreach ($this->validators as $validator) {
             /* @var $validator ValidatorInterface */
             $validator->setValue($this->getValue());
