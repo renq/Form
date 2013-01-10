@@ -2,11 +2,12 @@
 
 namespace Nautilus\Form\Element;
 
+use Nautilus\Form\FormObjectInterface;
 use Nautilus\Form\Html\Attributes;
 use Nautilus\Form\Html\Tag;
 use Nautilus\Validator\ValidatorInterface;
 
-abstract class Element
+abstract class Element implements FormObjectInterface
 {
 
     private $name;
@@ -112,7 +113,6 @@ abstract class Element
             /* @var $validator ValidatorInterface */
             $validator->setValue($this->getValue());
             $validatorResult = $validator->validate();
-            // var_dump($validatorResult);
             if (!$validatorResult) {
                 $result = false;
                 $this->validationErrors = array_merge($this->validationErrors, $validator->getErrors());
